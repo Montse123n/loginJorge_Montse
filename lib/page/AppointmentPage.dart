@@ -14,6 +14,8 @@ class AppointmentPage extends StatefulWidget {
 
 class _AppointmentPageState extends State<AppointmentPage> {
   final _titleController = TextEditingController();
+  final _doctorNameController = TextEditingController();
+  final _addressController = TextEditingController();
   DateTime? _selectedDateTime;
 
   @override
@@ -21,6 +23,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
     super.initState();
     if (widget.appointment != null) {
       _titleController.text = widget.appointment!.title;
+      _doctorNameController.text = widget.appointment!.doctorName;
+      _addressController.text = widget.appointment!.address;
       _selectedDateTime = widget.appointment!.dateTime;
     }
   }
@@ -53,7 +57,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   void _saveAppointment() {
     final title = _titleController.text;
-    if (title.isEmpty || _selectedDateTime == null) {
+    final doctorName = _doctorNameController.text;
+    final address = _addressController.text;
+    if (title.isEmpty || _selectedDateTime == null || doctorName.isEmpty || address.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Por favor, completa todos los campos'),
       ));
@@ -64,6 +70,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
       id: widget.appointment?.id ?? DateTime.now().toString(),
       title: title,
       dateTime: _selectedDateTime!,
+      doctorName: doctorName,
+      address: address,
     );
 
     if (widget.appointment == null) {
@@ -79,7 +87,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.appointment == null ? 'Agregar Cita' : 'Editar Cita', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.grey[900],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -89,9 +97,31 @@ class _AppointmentPageState extends State<AppointmentPage> {
               controller: _titleController,
               decoration: InputDecoration(
                 labelText: 'Título',
-                labelStyle: TextStyle(color: Colors.teal),
+                labelStyle: TextStyle(color: Colors.grey[900]),
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.teal),
+                  borderSide: BorderSide(),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: _doctorNameController,
+              decoration: InputDecoration(
+                labelText: 'Nombre del Médico',
+                labelStyle: TextStyle(color: Colors.grey[900]),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(),
+                ),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            TextField(
+              controller: _addressController,
+              decoration: InputDecoration(
+                labelText: 'Dirección',
+                labelStyle: TextStyle(color: Colors.grey[900]),
+                focusedBorder: UnderlineInputBorder(
+                  
                 ),
               ),
             ),
@@ -107,7 +137,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
               onPressed: _saveAppointment,
               child: Text('Guardar Cita'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
+                backgroundColor: Colors.grey[900],
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                textStyle: TextStyle(fontSize: 18),
               ),
             ),
           ],

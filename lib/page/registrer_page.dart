@@ -17,6 +17,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,7 +69,8 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
- Widget _textFieldFirstName() {
+
+  Widget _textFieldFirstName() {
     return _textFieldGeneral(
       controller: _firstNameController,
       labelText: 'Nombre',
@@ -117,58 +123,46 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buttonSignUp() {
-  return ElevatedButton(
-    child: Text('Registrarme'),
-    onPressed: () async {
-      final firstName = _firstNameController.text;
-      final lastName = _lastNameController.text;
-      final email = _emailController.text;
-      final password = _passwordController.text;
-      final confirmPassword = _confirmPasswordController.text;
+    return ElevatedButton(
+      child: Text('Registrarme'),
+      onPressed: () async {
+        final firstName = _firstNameController.text;
+        final lastName = _lastNameController.text;
+        final email = _emailController.text;
+        final password = _passwordController.text;
+        final confirmPassword = _confirmPasswordController.text;
 
-      // Validar campos vacíos
-      if (firstName.isEmpty || lastName.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+        // Validar campos vacíos
+        if (firstName.isEmpty || lastName.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Por favor, completa todos los campos'),
+          ));
+          return;
+        }
+
+        // Validar formato del correo electrónico
+        if (!_isValidEmail(email)) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Correo electrónico no válido'),
+          ));
+          return;
+        }
+
+        // Validar que las contraseñas coincidan
+        if (password != confirmPassword) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Las contraseñas no coinciden'),
+          ));
+          return;
+        }
+
+        await DatabaseHelper().insertUser(firstName, lastName, email, password);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Por favor, completa todos los campos'),
+          content: Text('Usuario registrado correctamente'),
         ));
-        return;
-      }
-
-      // Validar que las contraseñas coincidan
-      if (password != confirmPassword) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Las contraseñas no coinciden'),
-        ));
-        return;
-      }
-
-      await DatabaseHelper().insertUser(firstName, lastName, email, password);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Usuario registrado correctamente'),
-      ));
-    },
-  );
-}
-
-  Widget _buttonLogin() {
-  return ElevatedButton(
-    child: Text('Iniciar Sesión'),
-    onPressed: () async {
-      final email = _emailController.text;
-      final password = _passwordController.text;
-      final user = await DatabaseHelper().getUser(email, password);
-      if (user != null) {
-        // Navegar a la pantalla de inicio
-        Navigator.pushReplacementNamed(context, HomePage.id);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Correo o contraseña incorrectos'),
-        ));
-      }
-    },
-  );
-}
-
+      },
+    );
+  }
 }
 
 class _textFieldGeneral extends StatelessWidget {
@@ -209,7 +203,3 @@ class _textFieldGeneral extends StatelessWidget {
     );
   }
 }
-  // Métodos para los campos de texto
-  // _textFieldFirstName(), _textFieldLastName(), _textFieldEmail(), 
-  // _textFieldPassword(), _textFieldConfirmPassword() y 
-  // _buttonSignUp() se mantienen iguales que ante

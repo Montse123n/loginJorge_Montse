@@ -1,24 +1,24 @@
 import 'package:login/page/appointment_page.dart';
 
 class AppointmentService {
-  List<Appointment> appointments = [];
+  final List<Appointment> _appointments = [];
 
-  void addAppointment(Appointment appointment) {
-    appointments.add(appointment);
+  List<Appointment> getAllAppointments() {
+    return _appointments;
   }
 
-  void editAppointment(String id, Appointment updatedAppointment) {
-    final index = appointments.indexWhere((app) => app.id == id);
+  void addAppointment(Appointment appointment) {
+    _appointments.add(appointment);
+  }
+
+  void editAppointment(String id, Appointment newAppointment) {
+    final index = _appointments.indexWhere((appointment) => appointment.id == id);
     if (index != -1) {
-      appointments[index] = updatedAppointment;
+      _appointments[index] = newAppointment;
     }
   }
 
   void deleteAppointment(String id) {
-    appointments.removeWhere((app) => app.id == id);
-  }
-
-  List<Appointment> getAllAppointments() {
-    return appointments;
+    _appointments.removeWhere((appointment) => appointment.id == id);
   }
 }

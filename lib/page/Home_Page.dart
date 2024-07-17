@@ -71,9 +71,22 @@ class _HomePageState extends State<HomePage> {
                     fontSize: 18,
                   ),
                 ),
-                subtitle: Text(
-                  appointment.dateTime.toString(),
-                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      appointment.dateTime.toString(),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                    ),
+                    Text(
+                      'Médico: ${appointment.doctorName}',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                    ),
+                    Text(
+                      'Dirección: ${appointment.address}',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                    ),
+                  ],
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.delete, color: Colors.red),
