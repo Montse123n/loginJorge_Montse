@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromARGB(250, 255, 0, 0),
+        backgroundColor: Color.fromARGB(248, 25, 0, 255),
         body: Center(
           child: SingleChildScrollView(
             child: Column(

@@ -21,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromARGB(250, 255, 0, 0),
+        backgroundColor: Color.fromARGB(249, 43, 0, 255),
         body: Center(
           child: SingleChildScrollView(
             child: Column(
