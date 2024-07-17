@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login/page/Home_page.dart';  // Asegúrate de que el nombre del archivo sea correcto
+import 'package:login/page/Home_page.dart';
 import 'package:login/page/registrer_page.dart';
 import 'database_helper.dart';
 
@@ -14,11 +14,16 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromARGB(248, 25, 0, 255),
+        backgroundColor: Color.fromARGB(250, 255, 0, 0),
         body: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -44,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushReplacementNamed(context, RegisterPage.id);
                   },
                   child: Text(
-                    '¿No tienes una cuenta? Regístrate.',
+                    '¿No tienes una cuenta? Registrate.',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -60,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
     return _textFieldGeneral(
       controller: _emailController,
       labelText: 'Correo electrónico',
-      hintText: 'ejemplo@gmail.com',
+      hintText: 'mon1@gmail.com',
       keyboardType: TextInputType.emailAddress,
       icon: Icons.email,
     );
@@ -83,8 +88,18 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () async {
         final email = _emailController.text;
         final password = _passwordController.text;
+
+        // Validar formato del correo electrónico
+        if (!_isValidEmail(email)) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Correo electrónico no válido'),
+          ));
+          return;
+        }
+
         final user = await DatabaseHelper().getUser(email, password);
         if (user != null) {
+          // Navegar a la pantalla de inicio
           Navigator.pushReplacementNamed(context, HomePage.id);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -134,4 +149,3 @@ class _textFieldGeneral extends StatelessWidget {
     );
   }
 }
-
